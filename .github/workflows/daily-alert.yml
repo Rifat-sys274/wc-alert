@@ -1,0 +1,23 @@
+name: WC daily WhatsApp alert
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 2:00 AM UTC = 8:00 AM BDT
+  workflow_dispatch:        # lets you trigger manually for testing
+
+jobs:
+  send-alert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run alert script
+        env:
+          FOOTBALL_DATA_TOKEN: ${{ secrets.FOOTBALL_DATA_TOKEN }}
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+        run: python daily_matches.py
